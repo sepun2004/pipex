@@ -1,0 +1,10 @@
+total 36
+drwxr-xr-x 2 sepun 2019   106 Feb 12 21:16 .
+drwxr-xr-x 9 sepun 2019   111 Feb 12 18:17 ..
+-rwxr-xr-x 1 sepun 2019 16416 Feb 12 21:16 a.out
+-rw-r--r-- 1 sepun 2019  2331 Feb 12 21:16 main.c
+-rw-r--r-- 1 sepun 2019    98 Feb 12 20:55 main2.c
+-rw-r--r-- 1 sepun 2019     0 Feb 12 19:56 makefile
+-rw-r--r-- 1 sepun 2019     0 Feb 12 21:16 outfile
+-rw-r--r-- 1 sepun 2019  1066 Feb 12 19:59 pipex.h
+-rw-r--r-- 1 sepun 2019    61 Feb 12 20:10 test
