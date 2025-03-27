@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:58:33 by sepun             #+#    #+#             */
-/*   Updated: 2025/03/19 10:46:11 by marvin           ###   ########.fr       */
+/*   Updated: 2025/03/26 20:53:48 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,47 @@ char	**check_path(char **env)
 	return (NULL);
 }
 
+void ejecution(pipex_t *pipex, char *cmd)
+{
+	printf("cmd es : %s", cmd);
+	// char **str;
+	// int i;
+	// int j;
+	
+	// str = ft_split(cmd, ' ');
+	// if (!str)
+	// 	print_error_and_exit("Error: No se pudo hacer split");
+	// i = 0;
+	// j = 0;
+	
+	// while (str[i] != NULL)
+	// {
+	// 	while (str[i][j] != '\0')
+	// 	{
+	// 		if (str[i][j] == '.' && str[])
+	// 		{
+	// 			/* code */
+	// 		}
+			
+	// 		j++;
+	// 	}		
+	// 	i++;
+	// }
+}
+
 void first_command(pipex_t *pipex, char *cmd, char *file_name)
 {
 	pipex->fd[0] = open(file_name, O_RDONLY);
 	if (pipex->fd[0] == -1)
 		print_error_and_exit("Error: No se pudo abrir el archivo");
-	
+	if (dup2(pipex->fd[0], STDIN_FILENO) == -1)
+		print_error_and_exit("Error: No se pudo duplicar el descriptor de archivo");
+	close(pipex->fd[0]);
+	if (dup2(pipex->pipe_fd[1], STDOUT_FILENO) == -1)
+		print_error_and_exit("Error: No se pudo duplicar el descriptor de archivo");
+	close(pipex->pipe_fd[1]);
+	close(pipex->pipe_fd[0]);
+	ejecution(pipex, cmd);
 }
 
 
@@ -122,7 +157,6 @@ int main(int argc, char **argv, char **env)
 	{
 		printf("pid2\n");
 		printf("este es el hijo\n");
-		// pid2_exec(fd, pipe_fd);
 	}
 	pipex.fd[0] = open(argv[1], O_RDONLY);
 	if (pipex.fd[0] == -1)
