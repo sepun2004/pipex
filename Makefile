@@ -1,24 +1,30 @@
+GREEN = \033[0;32m
+RED = \033[0;31m
+NC = \033[0m
+CURRENT_FILE = 0
+TOTAL_FILES = $(words $(SRC))
+
 NAME = pipex
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CC = gcc -g
+CFLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
-SRCS = /src/main.c
+SRCS = ./src/pipex.c
 
-OBJS = $(SRCS:.c=.o)
+OBJ = $(SRCS:.c=.o)
 
-all: show_progress $(NAME)
+all:  $(NAME) #show_progress
 
 $(NAME): $(OBJ)
-	@make bonus -s -C libft
 	@make -s -C libft
+	@make bonus -s -C libft
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L libft -lft
 	@echo "$(GREEN)It has been compiled, have a nice day.👍$(NC)";
 
-%.o: %.c
-	$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE) + 1))))
-	@printf "Compiling $<... $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_FILES))))%%\r"
-	@$(CC) $(CFLAGS) -c $< -o $@ 
+# %.o: %.c
+# 	$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE) + 1))))
+# 	@printf "Compiling $<... $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_FILES))))%%\r"
+# 	@$(CC) $(CFLAGS) -c $< -o $@ 
 
 show_progress:
 	@if [ -f $(NAME) ]; then \
