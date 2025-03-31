@@ -6,7 +6,7 @@
 /*   By: sepun <sepun@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:58:33 by sepun             #+#    #+#             */
-/*   Updated: 2025/03/31 17:27:15 by sepun            ###   ########.fr       */
+/*   Updated: 2025/03/31 18:42:00 by sepun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void second_command(pipex_t *pipex, char *cmd, char *file_name)
 	close(pipex->fd[1]);
 	close(pipex->pipe_fd[1]);
 	close(pipex->pipe_fd[0]);
-	dprintf(2, "ingresa por el segundo comando \n");
+	// dprintf(2, "ingresa por el segundo comando \n");
 	execute(pipex, cmd);
 }
 
@@ -93,7 +93,7 @@ char	**check_path(char **env, pipex_t *pipex)
 
 char *search_path(char **path, char **cmd)
 {
-	dprintf(2, "ingresa a search_path\n");
+	// dprintf(2, "ingresa a search_path\n");
 	char *line;
 	char *join;
 	int i;
@@ -122,6 +122,7 @@ void execute(pipex_t *pipex, char *cmd)
 	char **str;
 	char *temp;
 
+	temp = NULL;
 	str = ft_split(cmd, ' ');
 	if (!str)
 		print_error_and_exit("Error: No se pudo hacer split", pipex);
@@ -139,7 +140,8 @@ void execute(pipex_t *pipex, char *cmd)
 	}
 	else
 	{
-		temp = search_path(pipex->path, &cmd);
+		temp = search_path(pipex->path, &str[0]);
+		dprintf(2, "temp: %s\n", temp);
 		if (temp == NULL || execve(temp, str, pipex->env) == -1)
 			print_error_and_exit("Error: No se pudo ejecutar el comando ----", pipex);
 	}
@@ -160,6 +162,19 @@ void first_command(pipex_t *pipex, char *cmd, char *file_name)
 	execute(pipex, cmd);
 }
 
+void free_path(char **path)
+{
+	int i;
+
+	i = 0;
+	while (path[i] != NULL)
+	{
+		free(path[i]);
+		i++;
+	}
+	free(path);
+}
+
 
 int main(int argc, char **argv, char **env)
 {
@@ -175,23 +190,15 @@ int main(int argc, char **argv, char **env)
 	pipex.pid1 = fork();
 	if (pipex.pid1 == 0)
 		first_command(&pipex, argv[2], argv[1]);
+	// dprintf(2, "aqui inicia el segundo comando\n");
 	pipex.pid2 = fork();
 	if (pipex.pid2 == 0)
 		second_command(&pipex, argv[3], argv[4]);
-	// pipex.fd[0] = open(argv[1], O_RDONLY);
-	// if (pipex.fd[0] == -1)
-	// 	print_error_and_exit("Error: No se pudo abrir el archivo");
-	// pipex.fd[1] = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	// if (pipex.fd[1] == -1)
-	// 	print_error_and_exit("Error: No se pudo crear el archivo");
-
 	close(pipex.pipe_fd[0]);
 	close(pipex.pipe_fd[1]);
-
-	//Liberar PATH (double str)
-	
+	free_path(pipex.path);
 	waitpid(pipex.pid1, &pipex.status, 0);
 	waitpid(pipex.pid2, &pipex.status, 0);
-		
+
 	return (0);
 }
