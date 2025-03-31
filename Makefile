@@ -6,7 +6,7 @@ TOTAL_FILES = $(words $(SRC))
 
 NAME = pipex
 CC = gcc -g
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror 
 RM = rm -f
 
 SRCS = ./src/pipex.c
@@ -30,6 +30,9 @@ show_progress:
 	@if [ -f $(NAME) ]; then \
 		echo "$(GREEN)The compiled code is already updated.$(NC)"; \
 	fi
+
+norm:
+	@norminette $(SRCS) ./include/pipex.h
 
 clean: 
 	@$(RM) $(OBJ)
