@@ -6,7 +6,7 @@
 /*   By: sepun <sepun@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:58:33 by sepun             #+#    #+#             */
-/*   Updated: 2025/03/29 20:13:34 by sepun            ###   ########.fr       */
+/*   Updated: 2025/03/31 17:27:15 by sepun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ int ft_len(char **cmd)
 
 char	**check_path(char **env, pipex_t *pipex)
 {
-	int i;
-	char *path;
-	char **new_path;
+	char	**new_path;
+	char	*path;
+	int		i;
 
 	i = 0;
 	while (env[i] != NULL)
@@ -83,7 +83,7 @@ char	**check_path(char **env, pipex_t *pipex)
 		}
 		i++;
 	}
-	print_error_and_exit("Error: No se encontro la variable de entorno PATH\n", pipex);
+	// print_error_and_exit("Error: No se encontro la variable de entorno PATH\n", pipex);
 	return (NULL);
 }
 
@@ -91,31 +91,30 @@ char	**check_path(char **env, pipex_t *pipex)
 // /bin/ls
 // ls
 
-char *search_path(char **path, char *cmd)
+char *search_path(char **path, char **cmd)
 {
 	dprintf(2, "ingresa a search_path\n");
 	char *line;
-	char *nose;
+	char *join;
 	int i;
 
 	i = 0;
-	nose = NULL;
+	join = NULL;
+	if (path == NULL)
+		return (NULL);
 	while (path[i] != NULL)
 	{
-		nose = ft_strjoin(path[i], "/");
-		if (nose == NULL)
-			return (NULL);
-		line = ft_strjoin(nose, cmd);
+		join = ft_strjoin(path[i], "/");
+		if (join == NULL)
+			print_error_and_exit("Error: No se pudo hacer join\n", NULL);
+		line = ft_strjoin(join, cmd[0]);
 		if (line == NULL)
-			return (NULL);
+			print_error_and_exit("Error: No se pudo hacer join\n", NULL);
 		if (access(line, F_OK | X_OK) == 0)
-		{
-			free(nose);
 			return (line);
-		}
 		i++;
 	}
-	return (NULL);
+	return (cmd[0]);
 }
 
 void execute(pipex_t *pipex, char *cmd)
@@ -140,7 +139,7 @@ void execute(pipex_t *pipex, char *cmd)
 	}
 	else
 	{
-		temp = search_path(pipex->path, cmd);
+		temp = search_path(pipex->path, &cmd);
 		if (temp == NULL || execve(temp, str, pipex->env) == -1)
 			print_error_and_exit("Error: No se pudo ejecutar el comando ----", pipex);
 	}
