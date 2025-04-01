@@ -9,7 +9,9 @@ CC = gcc -g
 CFLAGS = -Wall -Wextra -Werror 
 RM = rm -f
 
-SRCS = ./src/pipex.c
+SRCS = ./src/pipex.c \
+		./src/utils.c\
+		./src/commands.c \
 
 OBJ = $(SRCS:.c=.o)
 
