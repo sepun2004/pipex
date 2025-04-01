@@ -6,7 +6,7 @@
 /*   By: sepun <sepun@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 13:35:04 by sepun             #+#    #+#             */
-/*   Updated: 2025/03/31 19:28:42 by sepun            ###   ########.fr       */
+/*   Updated: 2025/04/01 20:37:03 by sepun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,5 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (j < size_s2)
 		str[i++] = s2[j++];
 	str[i] = '\0';
-	// free(s1);
 	return (str);
 }

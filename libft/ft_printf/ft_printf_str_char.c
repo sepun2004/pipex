@@ -21,8 +21,6 @@ int	ft_putchar(char argument)
 	return (count);
 }
 
-
-
 int	ft_putstr(char *argument)
 {
 	int	count;

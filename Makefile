@@ -2,7 +2,7 @@ GREEN = \033[0;32m
 RED = \033[0;31m
 NC = \033[0m
 CURRENT_FILE = 0
-TOTAL_FILES = $(words $(SRC))
+# TOTAL_FILES = $(words $(SRC))
 
 NAME = pipex
 CC = gcc -g
@@ -13,9 +13,10 @@ SRCS = ./src/pipex.c \
 		./src/utils.c\
 		./src/commands.c \
 
+TOTAL_FILES = $(words $(SRCS))
 OBJ = $(SRCS:.c=.o)
 
-all:  $(NAME) #show_progress
+all: show_progress $(NAME)
 
 $(NAME): $(OBJ)
 	@make -s -C libft
@@ -23,10 +24,13 @@ $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L libft -lft
 	@echo "$(GREEN)It has been compiled, have a nice day.👍$(NC)";
 
-# %.o: %.c
-# 	$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE) + 1))))
-# 	@printf "Compiling $<... $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_FILES))))%%\r"
-# 	@$(CC) $(CFLAGS) -c $< -o $@ 
+# debug:
+# 	@valgrind -s --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(NAME) Makefile ".//" "" output
+
+%.o: %.c
+	$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE) + 1))))
+	@printf "Compiling $<... $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_FILES))))%%\r"
+	@$(CC) $(CFLAGS) -c $< -o $@ 
 
 show_progress:
 	@if [ -f $(NAME) ]; then \
